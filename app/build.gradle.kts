@@ -4,6 +4,7 @@ plugins {
 
     id("kotlin-kapt") // Necesario para la inyección de dependencias con Hilt
 
+
 }
 
 android {
@@ -93,4 +94,18 @@ dependencies {
 
 
     implementation(kotlin("script-runtime"))
+
+    //se agrega esto de momento
+
+    implementation ("androidx.compose.material3:material3:1.0.0") // Asegúrate de usar la última versión
+    implementation ("androidx.compose.ui:ui:1.4.0") // O la versión más reciente
+    implementation ("androidx.compose.material:material-icons-extended:1.4.0")
+
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0")
+
+    // se agrega mas
+
+    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")  // Para usar Hilt con Compose
+    implementation ("com.google.dagger:hilt-android:2.44")          // Dependencia principal de Hilt
+    kapt ("com.google.dagger:hilt-compiler:2.44")                // Para usar Hilt con anotaciones
 }

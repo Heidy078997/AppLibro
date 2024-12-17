@@ -12,6 +12,9 @@ import retrofit2.Response
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
+import okhttp3.ResponseBody
+
+
 class BookRepository(private val bookApi: BookApiService) {
 
     suspend fun obtenerTodosLibros(): List<Book> {
@@ -76,8 +79,78 @@ class BookRepository(private val bookApi: BookApiService) {
         return bookApi.agregarLibro(book)
     }
 
-
-
-
     //hasta aca
+
+    suspend fun eliminarLibro(id: Int): Response<Void> {
+        return bookApi.eliminarLibro(id)
+    }
+
+    // Método para modificar un libro
+
+   /*
+    //cambio
+
+    suspend fun modificarLibro(id: Int, book: Book): Response<Book> {
+        return bookApi.modificarLibro(id, book)
+    }
+    //cambio */
+
+    /*suspend fun modificarLibro(id: Int, book: Book): Response<Book> {
+        return try {
+            bookApi.modificarLibro(id, book)
+        } catch (e: Exception) {
+            Log.e("BookRepository", "Error modificando el libro: ${e.message}")
+            throw e
+        }
+    }*/
+
+    suspend fun modificarLibro(id: Int, book: Book): Response<Book> {
+        return try {
+            bookApi.modificarLibro(id, book) // Llamada a la API
+        } catch (e: Exception) {
+            Log.e("BookRepository", "Error modificando el libro: ${e.message}")
+            throw e
+        }
+    }
+
+
+
+    // Nuevo método para obtener un libro por ID
+    suspend fun obtenerLibroPorId(id: Int): Response<Book> {
+        return try {
+            // Realiza la solicitud GET al endpoint correspondiente en la API
+            bookApi.getLibro(id)
+        } catch (e: HttpException) {
+            // En caso de un error HTTP, se devuelve una respuesta de error con el código HTTP y mensaje
+            val errorBody = ResponseBody.create(null, "Error en la conexión: ${e.message()}")
+            Response.error<Book>(e.code(), errorBody)
+        } catch (e: Exception) {
+            // En caso de otro tipo de excepción, se devuelve una respuesta de error genérica
+            val errorBody = ResponseBody.create(null, "Error desconocido: ${e.message}")
+            Response.error<Book>(500, errorBody)
+        }
+    }
+
+    //nuevos metodos
+
+    // Nuevo método para obtener autor por id
+    suspend fun obtenerAutorPorId(id: Int): Response<Autor> {
+        return try {
+            bookApi.obtenerAutorPorId(id)
+        } catch (e: Exception) {
+            val errorBody = ResponseBody.create(null, "Error en la conexión: ${e.message}")
+            Response.error<Autor>(500, errorBody)
+        }
+    }
+
+    // Nuevo método para obtener genero por id
+    suspend fun obtenerGeneroPorId(id: Int): Response<Genero> {
+        return try {
+            bookApi.obtenerGeneroPorId(id)
+        } catch (e: Exception) {
+            val errorBody = ResponseBody.create(null, "Error en la conexión: ${e.message}")
+            Response.error<Genero>(500, errorBody)
+        }
+    }
+
 }

@@ -15,44 +15,60 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+
 
 @Composable
 fun BookDetailScreen(bookId: String, viewModel: SearchViewModel, navController: NavController) {
 
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current // Obtener el contexto actual para usarlo en el ViewModel
 
+    // Variable para controlar el estado del diálogo de confirmación
+    var showDialog by remember { mutableStateOf(false) }
     // Buscar el libro en la lista de libros usando el libroId
     val book = uiState.books.find { it.libroId == bookId.toIntOrNull() }
 
     if (book != null) {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally // Centra todo horizontalmente
         ) {
 
             // Contenedor con scroll para los detalles del libro
-            Column(modifier = Modifier
-                .weight(1f) // El contenido principal ocupa el espacio disponible
-                .verticalScroll(rememberScrollState()) // Permite desplazamiento
+            Column(
+                modifier = Modifier
+                    .weight(1f) // El contenido principal ocupa el espacio disponible
+                    .verticalScroll(rememberScrollState()) // Permite desplazamiento
+                    .fillMaxWidth(), // Ajusta al ancho disponible
+                horizontalAlignment = Alignment.CenterHorizontally // Centra los elementos internos
             ) {
-                // Imagen de portada
+                // Imagen de portada centrada
                 if (!book.portadaUrl.isNullOrEmpty()) {
                     Box(
                         modifier = Modifier
@@ -152,60 +168,63 @@ fun BookDetailScreen(bookId: String, viewModel: SearchViewModel, navController: 
                 )
                 Text(text = book.sinopsis, style = MaterialTheme.typography.bodyMedium)
 
-                Spacer(modifier = Modifier.height(32.dp)) // Espacio adicional antes de los botones
+                Spacer(modifier = Modifier.height(32.dp)) // Espacio adicional
             }
 
-            // Pie de página con los botones fijos
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .background(Color.White) // Fondo blanco para el pie de página
+            // Botón para modificar el libro
+
+            // Botón para modificar el libro
+            Button(
+                onClick = {
+                    navController.navigate("editBook/${book.libroId}")
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF57C00))
             ) {
-                // Botones Modificar y Eliminar centrados
-                Row(
-                    horizontalArrangement = Arrangement.Center, // Alineación centrada
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    // Botón Modificar
-                    Button(
-                        onClick = { /* Aquí irá la lógica para modificar */ },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF57C00)), // Naranja
-                        modifier = Modifier
-                            .height(40.dp)
-                            .width(120.dp)
-                            .padding(4.dp)
-                    ) {
-                        Text("Modificar", style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp))
-                    }
+                Text("Modificar libro")
+            }
 
-                    Spacer(modifier = Modifier.width(16.dp))
 
-                    // Botón Eliminar
-                    Button(
-                        onClick = { /* Aquí irá la lógica para eliminar */ },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)), // Rojo
-                        modifier = Modifier
-                            .height(40.dp)
-                            .width(120.dp)
-                            .padding(4.dp)
-                    ) {
-                        Text("Eliminar", style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp))
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Botón Volver
-                Button(
-                    onClick = { navController.popBackStack() },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Volver")
-                }
+            // Botón Volver
+            Button(
+                onClick = { navController.popBackStack() },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Volver")
             }
         }
+
+        // Diálogo de confirmación para modificar
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = { Text("Confirmar modificación") },
+                text = { Text("¿Estás seguro de que quieres modificar este libro?") },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            // Aquí se agregará la lógica de modificación del libro
+                            showDialog = false // Cierra el diálogo después de modificar
+                            // Agregar lógica para redirigir a la pantalla de edición del libro
+                        }
+                    ) {
+                        Text("Modificar")
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = { showDialog = false } // Cierra el diálogo sin hacer nada
+                    ) {
+                        Text("Cancelar")
+                    }
+                }
+            )
+        }
     } else {
-        Text("No se encontró el libro", style = MaterialTheme.typography.bodyMedium)
+        Text(
+            text = "No se encontró el libro",
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }
+

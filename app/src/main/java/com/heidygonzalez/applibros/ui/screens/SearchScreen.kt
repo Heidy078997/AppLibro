@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,27 +36,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
-
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun SearchScreen(viewModel: SearchViewModel, navController: NavController) {
     val uiState by viewModel.uiState.collectAsState()
+    var query by remember { mutableStateOf("") }
+
+    // Estado para el cuadro de confirmación
+    val (showConfirmationDialog, setShowConfirmationDialog) = remember { mutableStateOf(false) }
+    val (bookIdToDelete, setBookIdToDelete) = remember { mutableStateOf<Int?>(null) }
 
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(16.dp)) {
-
-        var query by remember { mutableStateOf("") }
 
         // Campo de búsqueda
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -95,9 +98,9 @@ fun SearchScreen(viewModel: SearchViewModel, navController: NavController) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp)
+                            .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Contenedor para la imagen de portada
                         if (!book.portadaUrl.isNullOrEmpty()) {
                             Box(
                                 modifier = Modifier
@@ -114,24 +117,44 @@ fun SearchScreen(viewModel: SearchViewModel, navController: NavController) {
                             }
                         }
 
-                        // Espacio para los datos del libro
                         Column(
                             modifier = Modifier
                                 .padding(start = 16.dp)
-                                .fillMaxWidth()
+                                .weight(1f)
                         ) {
                             Text(text = "Título: ${book.titulo}", style = MaterialTheme.typography.bodyMedium)
                             Text(text = "ISBN: ${book.isbn}", style = MaterialTheme.typography.bodyMedium)
 
-                            // Enlace para ver más detalles
-                            Text(
-                                text = "Ver",
-                                style = MaterialTheme.typography.bodyMedium.copy(color = Color.Blue),
-                                modifier = Modifier.clickable {
-                                    // Navegar a la pantalla de detalles del libro
-                                    navController.navigate("bookDetailScreen/${book.libroId}")
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "Ver",
+                                    style = MaterialTheme.typography.bodyMedium.copy(color = Color.Blue),
+                                    modifier = Modifier.clickable {
+                                        navController.navigate("bookDetailScreen/${book.libroId}")
+                                    }
+                                )
+
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Button(
+                                        onClick = {
+                                            // Mostrar el cuadro de confirmación cuando se haga clic en Eliminar
+                                            setBookIdToDelete(book.libroId)
+                                            setShowConfirmationDialog(true)
+                                        },
+                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)),
+                                        modifier = Modifier.height(30.dp)
+                                    ) {
+                                        Text("Eliminar", style = MaterialTheme.typography.bodyMedium.copy(fontSize = 12.sp))
+                                    }
                                 }
-                            )
+                            }
                         }
                     }
                     Spacer(modifier = Modifier.height(8.dp))
@@ -139,7 +162,6 @@ fun SearchScreen(viewModel: SearchViewModel, navController: NavController) {
             }
         }
 
-        // Botón para agregar un libro
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = { navController.navigate("addBookScreen") },
@@ -147,5 +169,27 @@ fun SearchScreen(viewModel: SearchViewModel, navController: NavController) {
         ) {
             Text("Agregar un libro")
         }
+    }
+
+    // Ventana emergente de confirmación para eliminar
+    if (showConfirmationDialog && bookIdToDelete != null) {
+        AlertDialog(
+            onDismissRequest = { setShowConfirmationDialog(false) },
+            title = { Text("Confirmar eliminación") },
+            text = { Text("¿Estás seguro de que quieres eliminar este libro?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    bookIdToDelete?.let { viewModel.eliminarLibro(it, navController.context) }
+                    setShowConfirmationDialog(false)
+                }) {
+                    Text("Eliminar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { setShowConfirmationDialog(false) }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }
