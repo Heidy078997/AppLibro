@@ -38,16 +38,6 @@ class EditBookViewModel(private val repository: BookRepository) : ViewModel() {
         }
     }
 
-    /*fun obtenerLibro(id: Int) {
-        viewModelScope.launch {
-            try {
-                val libro = repository.obtenerLibroPorId(id)
-                _uiState.value = EditBookUiState(book = libro)
-            } catch (e: Exception) {
-                _uiState.value = EditBookUiState(errorMessage = "Error al obtener el libro")
-            }
-        }
-    }*/
 
     fun obtenerLibro(id: Int) {
         viewModelScope.launch {

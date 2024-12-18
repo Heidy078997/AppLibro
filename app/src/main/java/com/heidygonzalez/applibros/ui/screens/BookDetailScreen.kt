@@ -1,33 +1,27 @@
 package com.heidygonzalez.applibros.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,7 +30,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 
@@ -51,6 +44,15 @@ fun BookDetailScreen(bookId: String, viewModel: SearchViewModel, navController: 
     var showDialog by remember { mutableStateOf(false) }
     // Buscar el libro en la lista de libros usando el libroId
     val book = uiState.books.find { it.libroId == bookId.toIntOrNull() }
+
+
+    // Recargar el libro en revision
+    LaunchedEffect(bookId) {
+        if (book == null) {
+            viewModel.buscarLibros(bookId.toInt().toString()) // Re-cargar los datos
+        }
+    }
+    //en revision
 
     if (book != null) {
         Column(
@@ -171,7 +173,6 @@ fun BookDetailScreen(bookId: String, viewModel: SearchViewModel, navController: 
                 Spacer(modifier = Modifier.height(32.dp)) // Espacio adicional
             }
 
-            // Botón para modificar el libro
 
             // Botón para modificar el libro
             Button(
@@ -194,37 +195,7 @@ fun BookDetailScreen(bookId: String, viewModel: SearchViewModel, navController: 
             }
         }
 
-        // Diálogo de confirmación para modificar
-        if (showDialog) {
-            AlertDialog(
-                onDismissRequest = { showDialog = false },
-                title = { Text("Confirmar modificación") },
-                text = { Text("¿Estás seguro de que quieres modificar este libro?") },
-                confirmButton = {
-                    Button(
-                        onClick = {
-                            // Aquí se agregará la lógica de modificación del libro
-                            showDialog = false // Cierra el diálogo después de modificar
-                            // Agregar lógica para redirigir a la pantalla de edición del libro
-                        }
-                    ) {
-                        Text("Modificar")
-                    }
-                },
-                dismissButton = {
-                    Button(
-                        onClick = { showDialog = false } // Cierra el diálogo sin hacer nada
-                    ) {
-                        Text("Cancelar")
-                    }
-                }
-            )
-        }
-    } else {
-        Text(
-            text = "No se encontró el libro",
-            style = MaterialTheme.typography.bodyMedium
-        )
     }
+
 }
 

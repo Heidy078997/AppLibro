@@ -5,7 +5,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.heidygonzalez.applibros.data.BookAppContainer.bookApi
 import com.heidygonzalez.applibros.data.BookRepository
 import com.heidygonzalez.applibros.model.Book
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -2,13 +2,14 @@ package com.heidygonzalez.applibros.ui.screens
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -19,6 +20,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,9 +40,8 @@ import coil.compose.AsyncImage
 import com.heidygonzalez.applibros.model.Autor
 import com.heidygonzalez.applibros.model.Book
 import com.heidygonzalez.applibros.model.Genero
-
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.time.delay
+
 
 
 @Composable
@@ -87,6 +88,14 @@ fun AddBookScreen(viewModel: ABookViewModel, navController: NavController) {
         }
     }
 
+    //recargar
+
+    LaunchedEffect(Unit) {
+        viewModel.cargarAutores()
+    }
+
+    //hasta aqui
+
     Column(modifier = Modifier.padding(16.dp)) {
         // Botón de "Atrás"
         IconButton(onClick = { navController.popBackStack() }) {
@@ -122,6 +131,22 @@ fun AddBookScreen(viewModel: ABookViewModel, navController: NavController) {
                 }
             }
         )
+
+        //se añade prueba acá
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            TextButton(onClick = {
+                navController.navigate("AddAutorScreen") // ir a la pantalla de agregar autor
+            }) {
+                Text("Añadir Autor")
+            }
+        }
+
+
+        //hasta acá
 
         // DropdownMenu para autores
         DropdownMenu(
@@ -278,7 +303,7 @@ fun AddBookScreen(viewModel: ABookViewModel, navController: NavController) {
                         puntuacion = puntuacion.toDouble(),
                         fechaRegistro = "",
                         sinopsis = synopsis,
-                        autor = authors.find { it.autorId == authorId } ?: Autor(0, ""),
+                        autor = authors.find { it.autorId == authorId } ?: Autor(0, "", ),
                         genero = genres.find { it.generoId == genreId } ?: Genero(0, "")
                     )
                     viewModel.agregarLibro(nuevoLibro)

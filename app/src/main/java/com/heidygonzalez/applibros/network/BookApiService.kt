@@ -54,4 +54,9 @@ interface BookApiService {
     @GET("Genero/{id}") // Nuevo método para obtener género por ID
     suspend fun obtenerGeneroPorId(@Path("id") id: Int): Response<Genero> // Cambié el endpoint para obtener por ID
 
+
+    //agregar autor
+
+    @POST("Autor")
+    suspend fun agregarAutor(@Body autor: Autor): Response<Autor>
 }

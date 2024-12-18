@@ -26,11 +26,13 @@ class ABookViewModel(private val repository: BookRepository) : ViewModel() {
         cargarGeneros()
     }
 
-    private fun cargarAutores() {
+    // cargar autores
+     fun cargarAutores() {
         viewModelScope.launch {
-            _authors.value = repository.obtenerAutor()
+            _authors.value = repository.obtenerAutor()  // Llamada a autores
         }
     }
+
 
     private fun cargarGeneros() {
         viewModelScope.launch {

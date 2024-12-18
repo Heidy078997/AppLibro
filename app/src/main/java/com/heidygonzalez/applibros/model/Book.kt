@@ -1,6 +1,5 @@
 package com.heidygonzalez.applibros.model
 
-import java.util.Date
 
 data class Book(
     val libroId: Int,
@@ -21,10 +20,11 @@ data class Book(
 
 data class Autor(
     val autorId: Int,
-    val nombre: String
+    val nombre: String,
 )
 
 data class Genero(
     val generoId: Int,
-    val descripcion: String
+    val descripcion: String,
+
 )

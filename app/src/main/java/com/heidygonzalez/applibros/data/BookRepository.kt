@@ -85,25 +85,6 @@ class BookRepository(private val bookApi: BookApiService) {
         return bookApi.eliminarLibro(id)
     }
 
-    // Método para modificar un libro
-
-   /*
-    //cambio
-
-    suspend fun modificarLibro(id: Int, book: Book): Response<Book> {
-        return bookApi.modificarLibro(id, book)
-    }
-    //cambio */
-
-    /*suspend fun modificarLibro(id: Int, book: Book): Response<Book> {
-        return try {
-            bookApi.modificarLibro(id, book)
-        } catch (e: Exception) {
-            Log.e("BookRepository", "Error modificando el libro: ${e.message}")
-            throw e
-        }
-    }*/
-
     suspend fun modificarLibro(id: Int, book: Book): Response<Book> {
         return try {
             bookApi.modificarLibro(id, book) // Llamada a la API
@@ -152,5 +133,16 @@ class BookRepository(private val bookApi: BookApiService) {
             Response.error<Genero>(500, errorBody)
         }
     }
+
+    suspend fun agregarAutor(autor: Autor): Response<Autor> {
+        return try {
+            bookApi.agregarAutor(autor) // Llamada a la API
+        } catch (e: Exception) {
+            Log.e("BookRepository", "Error al agregar el autor: ${e.message}")
+            throw e
+        }
+    }
+
+
 
 }

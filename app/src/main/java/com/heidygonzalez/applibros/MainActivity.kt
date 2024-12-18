@@ -11,6 +11,9 @@ import com.heidygonzalez.applibros.data.BookAppContainer
 import com.heidygonzalez.applibros.data.BookRepository
 import com.heidygonzalez.applibros.ui.screens.ABookViewModel
 import com.heidygonzalez.applibros.ui.screens.ABookViewModelFactory
+import com.heidygonzalez.applibros.ui.screens.AddAutorScreen
+import com.heidygonzalez.applibros.ui.screens.AddAutorViewModel
+import com.heidygonzalez.applibros.ui.screens.AddAutorViewModelFactory
 import com.heidygonzalez.applibros.ui.screens.AddBookScreen
 import com.heidygonzalez.applibros.ui.screens.BookDetailScreen
 import com.heidygonzalez.applibros.ui.screens.EditBookScreen
@@ -43,6 +46,14 @@ class MainActivity : ComponentActivity() {
             val editBookViewModel = ViewModelProvider(this, EditBookViewModelFactory(repository))
                 .get(EditBookViewModel::class.java)
 
+            //se inicializa aqui
+
+            // Nuevo: Inicializamos el ViewModel para AddAutorScreen
+            val addAutorViewModel = ViewModelProvider(this, AddAutorViewModelFactory(repository))
+                .get(AddAutorViewModel::class.java)
+
+            //hasta aqui
+
             // Definir la navegación
             NavHost(navController = navController, startDestination = "searchScreen") {
                 composable("searchScreen") {
@@ -74,6 +85,11 @@ class MainActivity : ComponentActivity() {
                             navController = navController
                         )
                     }
+                }
+
+                //nuevo
+                composable("addAutorScreen") {
+                    AddAutorScreen(viewModel = addAutorViewModel, navController = navController)
                 }
 
             }
