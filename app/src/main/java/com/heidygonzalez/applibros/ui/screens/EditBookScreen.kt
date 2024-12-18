@@ -1,6 +1,7 @@
 package com.heidygonzalez.applibros.ui.screens
 
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -32,8 +34,9 @@ import com.heidygonzalez.applibros.model.Book
 import com.heidygonzalez.applibros.model.Genero
 import androidx.compose.ui.unit.sp
 
+
 @Composable
-fun EditBookScreen(viewModel: EditBookViewModel, navController: NavController, bookId: Int) {
+fun EditBookScreen(viewModel: EditBookViewModel, sharedViewModel: SharedBookViewModel, navController: NavController, bookId: Int) {
     val authors by viewModel.autores.collectAsState()
     val genres by viewModel.generos.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
@@ -82,6 +85,13 @@ fun EditBookScreen(viewModel: EditBookViewModel, navController: NavController, b
         }
         isInitialized = true
     }
+
+    //recargar probar si funca
+
+    LaunchedEffect(Unit) {
+        viewModel.cargarAutores()
+    }
+
 
     Column(modifier = Modifier.padding(16.dp)) {
         // Botón de retroceso (Back)
@@ -147,7 +157,29 @@ fun EditBookScreen(viewModel: EditBookViewModel, navController: NavController, b
                     text = { Text(text = author.nombre) }
                 )
             }
+
+
         }
+
+        //nuevo  codigo aqui
+
+        // Botón para añadir autor
+        Text(
+            text = "Añadir Autor",
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .clickable {
+                    navController.navigate("AddAutorScreen") {
+
+                    }
+                }
+                .padding(8.dp),
+            fontSize = 14.sp
+        )
+
+
+
+        //hasta aca
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -278,6 +310,15 @@ fun EditBookScreen(viewModel: EditBookViewModel, navController: NavController, b
                         genero = genres.find { it.generoId == genreId } ?: Genero(0, "")
                     )
                     viewModel.actualizarLibro(updatedBook)
+
+                    //se agrega
+
+                    sharedViewModel.notifyBookUpdated(updatedBook)
+
+                     // Notificar a otras pantallas que se ha actualizado
+
+                    //
+
 
                     // Limpiar campos después de actualizar
                     title = ""

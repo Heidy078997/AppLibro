@@ -36,6 +36,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.navigation.NavController
@@ -43,7 +44,7 @@ import coil.compose.AsyncImage
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SearchScreen(viewModel: SearchViewModel, navController: NavController) {
+fun SearchScreen(viewModel: SearchViewModel, sharedViewModel: SharedBookViewModel, navController: NavController) {
     val uiState by viewModel.uiState.collectAsState()
     var query by remember { mutableStateOf("") }
 
@@ -78,6 +79,18 @@ fun SearchScreen(viewModel: SearchViewModel, navController: NavController) {
                 Text("Buscar")
             }
         }
+
+       //
+
+        // Recargar los libros cuando se actualiza algún libro
+        LaunchedEffect(key1 = sharedViewModel.updatedBook) {
+            sharedViewModel.updatedBook.collect {
+                viewModel.cargarLibros()  // Recargar la lista completa de libros
+            }
+        }
+
+
+        //
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -129,6 +142,8 @@ fun SearchScreen(viewModel: SearchViewModel, navController: NavController) {
                                     text = "Ver",
                                     style = MaterialTheme.typography.bodyMedium.copy(color = Color.Blue),
                                     modifier = Modifier.clickable {
+
+                                        //prueba jeje
                                         navController.navigate("bookDetailScreen/${book.libroId}")
                                     }
                                 )

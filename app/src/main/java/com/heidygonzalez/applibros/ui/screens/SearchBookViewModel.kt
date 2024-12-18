@@ -16,11 +16,18 @@ class SearchViewModel(private val repository: BookRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState: StateFlow<SearchUiState> = _uiState
 
+    //se agrega
+
+    private val _selectedBook = MutableStateFlow<Book?>(null)
+    val selectedBook: StateFlow<Book?> = _selectedBook
+
+    //hasta aca
+
     init {
         cargarLibros()
     }
 
-    private fun cargarLibros() {
+     fun cargarLibros() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             val books = repository.obtenerTodosLibros()
@@ -31,6 +38,7 @@ class SearchViewModel(private val repository: BookRepository) : ViewModel() {
             )
         }
     }
+
 
     fun buscarLibros(query: String) {
         viewModelScope.launch {
@@ -45,7 +53,7 @@ class SearchViewModel(private val repository: BookRepository) : ViewModel() {
     }
 
     fun clearSearch() {
-        cargarLibros()
+       cargarLibros()
     }
 
     fun eliminarLibro(id: Int, context: Context) {
@@ -66,25 +74,6 @@ class SearchViewModel(private val repository: BookRepository) : ViewModel() {
         }
     }
 
-    // Llamada para modificar un libro
-    fun modificarLibro(book: Book) {
-        viewModelScope.launch {
-            try {
-                // Usamos 'bookRepository' que es la instancia de BookRepository
-                val response = repository.modificarLibro(book.libroId, book)
-                if (response.isSuccessful) {
-                    // Aquí puedes manejar la respuesta en caso de éxito
-                    Log.d("SearchViewModel", "Libro modificado correctamente: ${response.body()}")
-                } else {
-                    // Manejo de error en caso de que la respuesta no sea exitosa
-                    Log.e("SearchViewModel", "Error al modificar el libro: ${response.message()}")
-                }
-            } catch (e: Exception) {
-                // Manejo de excepciones
-                Log.e("SearchViewModel", "Error desconocido al modificar el libro: ${e.message}")
-            }
-        }
-    }
 }
 
 

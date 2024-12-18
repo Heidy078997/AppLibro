@@ -16,7 +16,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,8 +33,9 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 
 
+
 @Composable
-fun BookDetailScreen(bookId: String, viewModel: SearchViewModel, navController: NavController) {
+fun BookDetailScreen(bookId: String, viewModel: SearchViewModel, sharedViewModel: SharedBookViewModel, navController: NavController) {
 
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current // Obtener el contexto actual para usarlo en el ViewModel
@@ -46,13 +46,6 @@ fun BookDetailScreen(bookId: String, viewModel: SearchViewModel, navController: 
     val book = uiState.books.find { it.libroId == bookId.toIntOrNull() }
 
 
-    // Recargar el libro en revision
-    LaunchedEffect(bookId) {
-        if (book == null) {
-            viewModel.buscarLibros(bookId.toInt().toString()) // Re-cargar los datos
-        }
-    }
-    //en revision
 
     if (book != null) {
         Column(

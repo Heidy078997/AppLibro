@@ -26,7 +26,7 @@ class EditBookViewModel(private val repository: BookRepository) : ViewModel() {
         cargarGeneros()
     }
 
-    private fun cargarAutores() {
+    fun cargarAutores() {
         viewModelScope.launch {
             _authors.value = repository.obtenerAutor()
         }
@@ -74,6 +74,9 @@ class EditBookViewModel(private val repository: BookRepository) : ViewModel() {
             }
         }
     }
+
+
+
 
 }
 

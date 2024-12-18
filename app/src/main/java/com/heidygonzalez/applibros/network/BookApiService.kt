@@ -3,6 +3,7 @@ package com.heidygonzalez.applibros.network
 import com.heidygonzalez.applibros.model.Autor
 import com.heidygonzalez.applibros.model.Book
 import com.heidygonzalez.applibros.model.Genero
+
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -59,4 +60,7 @@ interface BookApiService {
 
     @POST("Autor")
     suspend fun agregarAutor(@Body autor: Autor): Response<Autor>
+
+
+
 }

@@ -3,7 +3,9 @@ package com.heidygonzalez.applibros
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -22,7 +24,8 @@ import com.heidygonzalez.applibros.ui.screens.EditBookViewModelFactory
 import com.heidygonzalez.applibros.ui.screens.SearchScreen
 import com.heidygonzalez.applibros.ui.screens.SearchViewModel
 import com.heidygonzalez.applibros.ui.screens.SearchViewModelFactory
-
+import com.heidygonzalez.applibros.ui.screens.SharedBookViewModel
+import com.heidygonzalez.applibros.ui.screens.SharedBookViewModelFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +33,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             // Inicializamos el NavController para la navegación
             val navController = rememberNavController()
+
+            //se crea de momento esto
+            val sharedBookViewModel: SharedBookViewModel = viewModel(factory = SharedBookViewModelFactory(BookRepository(BookAppContainer.bookApi)))
 
             // Inicializamos el repository
             val repository = BookRepository(BookAppContainer.bookApi)
@@ -58,7 +64,7 @@ class MainActivity : ComponentActivity() {
             NavHost(navController = navController, startDestination = "searchScreen") {
                 composable("searchScreen") {
                     // Aquí mostramos la pantalla de búsqueda
-                    SearchScreen(viewModel = searchViewModel, navController = navController)
+                    SearchScreen(viewModel = searchViewModel, navController = navController, sharedViewModel = sharedBookViewModel)
                 }
                 composable("addBookScreen") {
                     // Y aquí mostramos la pantalla para agregar un libro
@@ -71,7 +77,8 @@ class MainActivity : ComponentActivity() {
                     BookDetailScreen(
                         bookId = bookId,
                         navController = navController,
-                        viewModel = searchViewModel
+                        viewModel = searchViewModel,
+                        sharedViewModel = sharedBookViewModel
                     )
                 }
 
@@ -82,7 +89,8 @@ class MainActivity : ComponentActivity() {
                         EditBookScreen(
                             bookId = bookId,
                             viewModel = editBookViewModel,
-                            navController = navController
+                            navController = navController,
+                            sharedViewModel = sharedBookViewModel
                         )
                     }
                 }

@@ -41,7 +41,7 @@ import com.heidygonzalez.applibros.model.Autor
 import com.heidygonzalez.applibros.model.Book
 import com.heidygonzalez.applibros.model.Genero
 import kotlinx.coroutines.delay
-
+import java.time.LocalDate
 
 
 @Composable
@@ -49,6 +49,8 @@ fun AddBookScreen(viewModel: ABookViewModel, navController: NavController) {
     val authors by viewModel.autores.collectAsState() // Lista de autores
     val genres by viewModel.generos.collectAsState() // Lista de géneros
     val uiState by viewModel.uiState.collectAsState()
+
+    val currentYear = LocalDate.now().year //para saber la fecha actual
 
     // Inicializa las variables con valores por defecto
     var title by remember { mutableStateOf("") }
@@ -132,7 +134,7 @@ fun AddBookScreen(viewModel: ABookViewModel, navController: NavController) {
             }
         )
 
-        //se añade prueba acá
+        //añadir autor
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -194,10 +196,30 @@ fun AddBookScreen(viewModel: ABookViewModel, navController: NavController) {
             }
         }
 
+        /*
+
         // Campo Año de Publicación con validación
         TextField(
             value = year,
             onValueChange = { year = it },
+            label = { Text("Año de publicación") },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        ) */
+
+        // Campo Año de Publicación con validación
+        TextField(
+            value = year,
+            onValueChange = {
+                // Validar que el año no sea mayor que el año actual
+                if (it.toIntOrNull() ?: 0 <= currentYear) {
+                    year = it
+                } else {
+
+                    println("El año no puede ser mayor al año actual.")
+
+                }
+            },
             label = { Text("Año de publicación") },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
