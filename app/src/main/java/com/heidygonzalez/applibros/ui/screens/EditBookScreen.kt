@@ -338,6 +338,8 @@ fun EditBookScreen(viewModel: EditBookViewModel, sharedViewModel: SharedBookView
         ) {
             Text("Actualizar")
         }
+
+
     }
         // Mensajes de éxito o error
         if (uiState.errorMessage != null) {
@@ -349,3 +351,6 @@ fun EditBookScreen(viewModel: EditBookViewModel, sharedViewModel: SharedBookView
 
     }
 }
+
+
+

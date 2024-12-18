@@ -32,7 +32,7 @@ class EditBookViewModel(private val repository: BookRepository) : ViewModel() {
         }
     }
 
-    private fun cargarGeneros() {
+    fun cargarGeneros() {
         viewModelScope.launch {
             _genres.value = repository.obtenerGenero()
         }
