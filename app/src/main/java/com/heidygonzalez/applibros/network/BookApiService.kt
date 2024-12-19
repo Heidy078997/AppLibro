@@ -1,8 +1,8 @@
 package com.heidygonzalez.applibros.network
-
 import com.heidygonzalez.applibros.model.Autor
 import com.heidygonzalez.applibros.model.Book
 import com.heidygonzalez.applibros.model.Genero
+import com.heidygonzalez.applibros.model.LoginRequest
 
 import retrofit2.Response
 import retrofit2.http.Body
@@ -60,6 +60,15 @@ interface BookApiService {
 
     @POST("Autor")
     suspend fun agregarAutor(@Body autor: Autor): Response<Autor>
+
+    //Login
+
+
+    @POST("Login/login")
+    suspend fun iniciarSesion(@Body loginRequest: LoginRequest): Response<Void>
+
+
+
 
 
 

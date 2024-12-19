@@ -5,6 +5,7 @@ import android.util.Log
 import com.heidygonzalez.applibros.model.Autor
 import com.heidygonzalez.applibros.model.Book
 import com.heidygonzalez.applibros.model.Genero
+import com.heidygonzalez.applibros.model.LoginRequest
 import com.heidygonzalez.applibros.network.BookApiService
 import okio.IOException
 import retrofit2.HttpException
@@ -142,6 +143,42 @@ class BookRepository(private val bookApi: BookApiService) {
             throw e
         }
     }
+
+    //metodo para el login
+
+    // Método para el inicio de sesión
+    /*suspend fun iniciarSesion(loginRequest: LoginRequest): LoginResponse? {
+        return try {
+            val response = bookApi.iniciarSesion(loginRequest)
+            if (response.isSuccessful) {
+                response.body() // Devuelve el LoginResponse si la respuesta es exitosa
+            } else {
+                Log.e("BookRepository", "Error HTTP: ${response.code()} - ${response.message()}")
+                null // Retorna null si hay algún error
+            }
+        } catch (e: Exception) {
+            Log.e("BookRepository", "Error al iniciar sesión: ${e.message}")
+            null
+        }
+    }*/
+
+    suspend fun iniciarSesion(loginRequest: LoginRequest): Boolean {
+        return try {
+            val response = bookApi.iniciarSesion(loginRequest)
+            if (response.isSuccessful) {
+                true // Inicio de sesión exitoso
+            } else {
+                Log.e("BookRepository", "Error HTTP: ${response.code()} - ${response.message()}")
+                false // Credenciales incorrectas
+            }
+        } catch (e: Exception) {
+            Log.e("BookRepository", "Error al iniciar sesión: ${e.message}")
+            false // Error en la conexión u otra excepción
+        }
+    }
+
+
+    //hasta aca
 
 
 

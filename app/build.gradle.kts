@@ -109,4 +109,6 @@ dependencies {
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")  // Para usar Hilt con Compose
     implementation ("com.google.dagger:hilt-android:2.44")          // Dependencia principal de Hilt
     kapt ("com.google.dagger:hilt-compiler:2.44")                // Para usar Hilt con anotaciones
+
+
 }

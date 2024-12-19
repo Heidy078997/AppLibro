@@ -26,6 +26,9 @@ import com.heidygonzalez.applibros.ui.screens.BookDetailScreen
 import com.heidygonzalez.applibros.ui.screens.EditBookScreen
 import com.heidygonzalez.applibros.ui.screens.EditBookViewModel
 import com.heidygonzalez.applibros.ui.screens.EditBookViewModelFactory
+import com.heidygonzalez.applibros.ui.screens.LoginScreen
+import com.heidygonzalez.applibros.ui.screens.LoginViewModel
+import com.heidygonzalez.applibros.ui.screens.LoginViewModelFactory
 import com.heidygonzalez.applibros.ui.screens.SearchScreen
 import com.heidygonzalez.applibros.ui.screens.SearchViewModel
 import com.heidygonzalez.applibros.ui.screens.SearchViewModelFactory
@@ -74,8 +77,22 @@ class MainActivity : ComponentActivity() {
 
                     //hasta aqui
 
+                    // Aquí inicializamos el LoginViewModel usando ViewModelProvider
+                    val loginViewModel = ViewModelProvider(
+                        this, LoginViewModelFactory(repository)
+                    ).get(LoginViewModel::class.java)
+                    //
+
                     // Definir la navegación
-                    NavHost(navController = navController, startDestination = "searchScreen") {
+                    NavHost(navController = navController, startDestination = "loginScreen") {
+
+                        // Ruta para la pantalla de login
+                        composable("loginScreen") {
+
+                            // Pasar el ViewModel a la pantalla de Login
+                            LoginScreen(navController = navController, loginViewModel = loginViewModel)
+                        }
+
                         composable("searchScreen") {
                             // Aquí mostramos la pantalla de búsqueda
                             SearchScreen(viewModel = searchViewModel, navController = navController, sharedViewModel = sharedBookViewModel)
