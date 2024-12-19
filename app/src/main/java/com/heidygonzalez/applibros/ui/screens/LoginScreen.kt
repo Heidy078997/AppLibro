@@ -23,92 +23,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.heidygonzalez.applibros.model.LoginRequest
-import com.heidygonzalez.applibros.ui.theme.AppLibrosTheme
-/*
-@Composable
-fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel()) {
-
-    // State to hold user inputs
-    var correo by remember { mutableStateOf("") }
-    var pass by remember { mutableStateOf("") }
-
-    // Observe the LiveData from LoginViewModel
-    val uiState by loginViewModel.uiState.observeAsState(UiState.Loading)
-
-    // UI elements
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        // Input fields for email and password
-        TextField(
-            value = correo,
-            onValueChange = { correo = it },
-            label = { Text("Correo") },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        TextField(
-            value = pass,
-            onValueChange = { pass = it },
-            label = { Text("Contraseña") },
-            modifier = Modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation()
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Login button
-        Button(
-            onClick = {
-                loginViewModel.login(correo, pass)
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Iniciar sesión")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Show error message or loading state
-        when (val state = uiState) {
-            is UiState.Loading -> {
-                // Show loading indicator if state is Loading
-                CircularProgressIndicator()
-            }
-            is UiState.Success -> {
-                // Navigate to SearchScreen if login is successful
-                LaunchedEffect(state) {
-                    navController.navigate("SearchScreen") // Assuming your search screen route is "searchScreen"
-                }
-            }
-            is UiState.Error -> {
-                // Show error message if login fails
-                Text(
-                    text = state.errorMessage,
-                    color = Color.Red // Directly using Color.Red for error messages
-                )
-            }
-        }
-    }
-}
-*/
+import kotlinx.coroutines.delay
 
 @Composable
 fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
     val context = LocalContext.current
     val loginState by loginViewModel.loginState.observeAsState()
+
+    var showToast by remember { mutableStateOf(false) }  // Variable para controlar los toasts
+
+    LaunchedEffect(loginState) {
+        // Restablece el estado de toasts después de un pequeño retraso
+        if (showToast) {
+            delay(2000)  // Retraso de 2 segundos
+            showToast = false
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -146,10 +81,12 @@ fun LoginScreen(navController: NavController, loginViewModel: LoginViewModel) {
 
         // Observa el estado de inicio de sesión
         loginState?.let { isLogged ->
-            if (isLogged) {
+            if (isLogged && !showToast) {  // Solo muestra el Toast si no ha sido mostrado antes
+                showToast = true
                 Toast.makeText(context, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
                 navController.navigate("searchScreen") // Cambia "searchScreen" por tu ruta real
-            } else {
+            } else if (!isLogged && !showToast) {
+                showToast = true
                 Toast.makeText(context, "Error en el inicio de sesión", Toast.LENGTH_SHORT).show()
             }
         }

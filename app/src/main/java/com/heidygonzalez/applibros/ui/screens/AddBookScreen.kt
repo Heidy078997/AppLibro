@@ -1,6 +1,7 @@
 package com.heidygonzalez.applibros.ui.screens
 
 import android.util.Log
+import android.util.Patterns
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -29,11 +31,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -196,17 +200,6 @@ fun AddBookScreen(viewModel: ABookViewModel, navController: NavController) {
             }
         }
 
-        /*
-
-        // Campo Año de Publicación con validación
-        TextField(
-            value = year,
-            onValueChange = { year = it },
-            label = { Text("Año de publicación") },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
-        ) */
-
         // Campo Año de Publicación con validación
         TextField(
             value = year,
@@ -259,8 +252,10 @@ fun AddBookScreen(viewModel: ABookViewModel, navController: NavController) {
             modifier = Modifier.fillMaxWidth()
         )
 
-        // Muestra la imagen de la portada (si se proporciona la URL)
-        if (portadaUrl.isNotEmpty()) {
+        //codigo de prueba añadido
+
+        // Muestra la imagen de la portada (si se proporciona una URL válida)
+        if (portadaUrl.isNotEmpty() && Patterns.WEB_URL.matcher(portadaUrl).matches()) {
             Box(
                 modifier = Modifier
                     .size(100.dp)
@@ -278,7 +273,25 @@ fun AddBookScreen(viewModel: ABookViewModel, navController: NavController) {
                     }
                 )
             }
+        } else if (portadaUrl.isNotEmpty()) {
+            // Si la URL no es válida, muestra un mensaje de error o una imagen por defecto
+            Box(
+                modifier = Modifier
+                    .size(100.dp)
+                    .background(Color.Gray, shape = RectangleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "URL inválida",
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
+
+
+        //
 
         // Botón Guardar
         Button(

@@ -27,7 +27,7 @@ class SearchViewModel(private val repository: BookRepository) : ViewModel() {
         cargarLibros()
     }
 
-     fun cargarLibros() {
+    fun cargarLibros() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             val books = repository.obtenerTodosLibros()
@@ -53,7 +53,7 @@ class SearchViewModel(private val repository: BookRepository) : ViewModel() {
     }
 
     fun clearSearch() {
-       cargarLibros()
+        cargarLibros()
     }
 
     fun eliminarLibro(id: Int, context: Context) {
