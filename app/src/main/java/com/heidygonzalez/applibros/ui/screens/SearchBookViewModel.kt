@@ -1,7 +1,6 @@
 package com.heidygonzalez.applibros.ui.screens
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,13 +14,6 @@ import kotlinx.coroutines.launch
 class SearchViewModel(private val repository: BookRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState: StateFlow<SearchUiState> = _uiState
-
-    //se agrega
-
-    private val _selectedBook = MutableStateFlow<Book?>(null)
-    val selectedBook: StateFlow<Book?> = _selectedBook
-
-    //hasta aca
 
     init {
         cargarLibros()

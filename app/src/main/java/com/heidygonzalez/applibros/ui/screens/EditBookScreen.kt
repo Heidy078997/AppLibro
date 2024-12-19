@@ -86,7 +86,9 @@ fun EditBookScreen(viewModel: EditBookViewModel, sharedViewModel: SharedBookView
         isInitialized = true
     }
 
-    //recargar probar si funca
+
+
+    //recargar
 
     LaunchedEffect(Unit) {
         viewModel.cargarAutores()
@@ -161,7 +163,7 @@ fun EditBookScreen(viewModel: EditBookViewModel, sharedViewModel: SharedBookView
 
         }
 
-        //nuevo  codigo aqui
+
 
         // Botón para añadir autor
         Text(
@@ -178,8 +180,6 @@ fun EditBookScreen(viewModel: EditBookViewModel, sharedViewModel: SharedBookView
         )
 
 
-
-        //hasta aca
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -279,7 +279,6 @@ fun EditBookScreen(viewModel: EditBookViewModel, sharedViewModel: SharedBookView
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Botón Guardar
 
         // Botón Guardar
         Button(
@@ -315,21 +314,6 @@ fun EditBookScreen(viewModel: EditBookViewModel, sharedViewModel: SharedBookView
 
                     sharedViewModel.notifyBookUpdated(updatedBook)
 
-                     // Notificar a otras pantallas que se ha actualizado
-
-                    //
-
-
-                    // Limpiar campos después de actualizar
-                    title = ""
-                    isbn = ""
-                    authorId = -1
-                    genreId = -1
-                    year = ""
-                    pages = ""
-                    synopsis = ""
-                    puntuacion = ""
-                    portadaUrl = ""
                 } else {
                     Log.d("Validation", "Error en las validaciones")
                 }
@@ -347,6 +331,17 @@ fun EditBookScreen(viewModel: EditBookViewModel, sharedViewModel: SharedBookView
         }
         if (uiState.isSuccess) {
             Text(text = "Libro actualizado con éxito", color = Color.Green, modifier = Modifier.padding(top = 8.dp))
+
+            // Limpiar campos después de actualizar
+            title = ""
+            isbn = ""
+            authorId = -1
+            genreId = -1
+            year = ""
+            pages = ""
+            synopsis = ""
+            puntuacion = ""
+            portadaUrl = ""
         }
 
     }
