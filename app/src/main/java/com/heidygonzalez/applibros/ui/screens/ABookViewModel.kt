@@ -26,7 +26,6 @@ class ABookViewModel(private val repository: BookRepository) : ViewModel() {
         cargarGeneros()
     }
 
-    // cargar autores
      fun cargarAutores() {
         viewModelScope.launch {
             _authors.value = repository.obtenerAutor()  // Llamada a autores
@@ -56,9 +55,9 @@ class ABookViewModel(private val repository: BookRepository) : ViewModel() {
         }
     }
 
-    fun clearSuccessMessage() {
-        _uiState.value = _uiState.value.copy(isSuccess = false)
-    }
+    //fun clearSuccessMessage() {
+       // _uiState.value = _uiState.value.copy(isSuccess = false)
+   // }
 }
 
 data class AddBookUiState(

@@ -14,9 +14,9 @@ import retrofit2.Response
 class AddAutorViewModel(private val repository: BookRepository) : ViewModel() {
 
     private val _autores = MutableLiveData<List<Autor>>()
-    val autores: LiveData<List<Autor>> get() = _autores
+    //val autores: LiveData<List<Autor>> get() = _autores
 
-    var resultadoAgregarAutor: Response<Autor>? = null
+    //var resultadoAgregarAutor: Response<Autor>? = null
     var error: String? = null
 
     fun agregarAutor(autor: Autor, onResult: (Boolean) -> Unit) {

@@ -75,12 +75,17 @@ class EditBookViewModel(private val repository: BookRepository) : ViewModel() {
         }
     }
 
+    fun resetBook() {
+        _uiState.value = EditBookUiState() // Esto restablece el estado a sus valores predeterminados
+    }
+
 
 
 
 }
 
 data class EditBookUiState(
+
     val isLoading: Boolean = false,
     val isSuccess: Boolean = false,
     val errorMessage: String? = null,

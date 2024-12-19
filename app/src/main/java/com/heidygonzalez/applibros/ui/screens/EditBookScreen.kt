@@ -70,6 +70,7 @@ fun EditBookScreen(viewModel: EditBookViewModel, sharedViewModel: SharedBookView
         viewModel.obtenerLibro(bookId)
     }
 
+
     // Asignar los valores iniciales si no se ha hecho antes
     if (!isInitialized && uiState.book != null) {
         uiState.book?.let { book ->
@@ -86,8 +87,6 @@ fun EditBookScreen(viewModel: EditBookViewModel, sharedViewModel: SharedBookView
         isInitialized = true
     }
 
-
-
     //recargar
 
     LaunchedEffect(Unit) {
@@ -96,12 +95,13 @@ fun EditBookScreen(viewModel: EditBookViewModel, sharedViewModel: SharedBookView
 
 
     Column(modifier = Modifier.padding(16.dp)) {
+
         // Botón de retroceso (Back)
         IconButton(onClick = { navController.popBackStack() }) {
+            viewModel.resetBook()
             Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
         }
 
-        // Aquí va el resto de tu formulario y otros campos...
 
     Column(modifier = Modifier.padding(16.dp)) {
         // Campo Título
@@ -310,6 +310,7 @@ fun EditBookScreen(viewModel: EditBookViewModel, sharedViewModel: SharedBookView
                     )
                     viewModel.actualizarLibro(updatedBook)
 
+
                     //se agrega
 
                     sharedViewModel.notifyBookUpdated(updatedBook)
@@ -322,8 +323,6 @@ fun EditBookScreen(viewModel: EditBookViewModel, sharedViewModel: SharedBookView
         ) {
             Text("Actualizar")
         }
-
-
     }
         // Mensajes de éxito o error
         if (uiState.errorMessage != null) {
@@ -331,6 +330,7 @@ fun EditBookScreen(viewModel: EditBookViewModel, sharedViewModel: SharedBookView
         }
         if (uiState.isSuccess) {
             Text(text = "Libro actualizado con éxito", color = Color.Green, modifier = Modifier.padding(top = 8.dp))
+
 
             // Limpiar campos después de actualizar
             title = ""
@@ -342,7 +342,10 @@ fun EditBookScreen(viewModel: EditBookViewModel, sharedViewModel: SharedBookView
             synopsis = ""
             puntuacion = ""
             portadaUrl = ""
+
         }
+
+
 
     }
 }

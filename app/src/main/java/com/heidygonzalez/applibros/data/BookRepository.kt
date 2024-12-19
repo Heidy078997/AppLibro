@@ -113,8 +113,6 @@ class BookRepository(private val bookApi: BookApiService) {
         }
     }
 
-    //nuevos metodos
-
     // Nuevo método para obtener autor por id
     suspend fun obtenerAutorPorId(id: Int): Response<Autor> {
         return try {
@@ -144,24 +142,6 @@ class BookRepository(private val bookApi: BookApiService) {
         }
     }
 
-    //metodo para el login
-
-    // Método para el inicio de sesión
-    /*suspend fun iniciarSesion(loginRequest: LoginRequest): LoginResponse? {
-        return try {
-            val response = bookApi.iniciarSesion(loginRequest)
-            if (response.isSuccessful) {
-                response.body() // Devuelve el LoginResponse si la respuesta es exitosa
-            } else {
-                Log.e("BookRepository", "Error HTTP: ${response.code()} - ${response.message()}")
-                null // Retorna null si hay algún error
-            }
-        } catch (e: Exception) {
-            Log.e("BookRepository", "Error al iniciar sesión: ${e.message}")
-            null
-        }
-    }*/
-
     suspend fun iniciarSesion(loginRequest: LoginRequest): Boolean {
         return try {
             val response = bookApi.iniciarSesion(loginRequest)
@@ -176,9 +156,6 @@ class BookRepository(private val bookApi: BookApiService) {
             false // Error en la conexión u otra excepción
         }
     }
-
-
-    //hasta aca
 
 
 

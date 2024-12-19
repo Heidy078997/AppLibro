@@ -62,8 +62,6 @@ interface BookApiService {
     suspend fun agregarAutor(@Body autor: Autor): Response<Autor>
 
     //Login
-
-
     @POST("Login/login")
     suspend fun iniciarSesion(@Body loginRequest: LoginRequest): Response<Void>
 

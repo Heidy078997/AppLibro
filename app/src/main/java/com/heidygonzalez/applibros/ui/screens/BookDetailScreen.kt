@@ -16,11 +16,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,17 +31,25 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 
 
-
 @Composable
 fun BookDetailScreen(bookId: String, viewModel: SearchViewModel, sharedViewModel: SharedBookViewModel, navController: NavController) {
 
     val uiState by viewModel.uiState.collectAsState()
-    val context = LocalContext.current // Obtener el contexto actual para usarlo en el ViewModel
+    //val context = LocalContext.current // Obtener el contexto actual para usarlo en el ViewModel
 
     // Variable para controlar el estado del diálogo de confirmación
-    var showDialog by remember { mutableStateOf(false) }
+  //  var showDialog by remember { mutableStateOf(false) }
+
+
     // Buscar el libro en la lista de libros usando el libroId
     val book = uiState.books.find { it.libroId == bookId.toIntOrNull() }
+
+    // Recargar los libros cuando se actualiza algún libro
+    LaunchedEffect(key1 = sharedViewModel.updatedBook) {
+        sharedViewModel.updatedBook.collect {
+            viewModel.cargarLibros()
+        }
+    }
 
 
 
@@ -169,6 +175,7 @@ fun BookDetailScreen(bookId: String, viewModel: SearchViewModel, sharedViewModel
 
             // Botón para modificar el libro
             Button(
+
                 onClick = {
                     navController.navigate("editBook/${book.libroId}")
                 },

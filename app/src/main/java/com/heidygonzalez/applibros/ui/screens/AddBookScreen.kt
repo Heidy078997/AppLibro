@@ -152,8 +152,6 @@ fun AddBookScreen(viewModel: ABookViewModel, navController: NavController) {
         }
 
 
-        //hasta acá
-
         // DropdownMenu para autores
         DropdownMenu(
             expanded = expandedAuthor,
@@ -252,7 +250,6 @@ fun AddBookScreen(viewModel: ABookViewModel, navController: NavController) {
             modifier = Modifier.fillMaxWidth()
         )
 
-        //codigo de prueba añadido
 
         // Muestra la imagen de la portada (si se proporciona una URL válida)
         if (portadaUrl.isNotEmpty() && Patterns.WEB_URL.matcher(portadaUrl).matches()) {
